@@ -20,7 +20,7 @@ namespace WebServicesMDX.Controllers
 
             List<string> stringlist = new List<string>();
 
-            stringlist = (List<string>)d.testingMDX();
+            stringlist = (List<string>)d.GetAllProducts();
 
             return stringlist;
         }

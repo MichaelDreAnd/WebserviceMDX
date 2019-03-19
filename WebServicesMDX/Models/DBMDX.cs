@@ -34,14 +34,27 @@ namespace WebServicesMDX.Models
 
         }
 
-        //public IEnumerable<string> GetAllProducts(int year)
-        //{
-        //    string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns,non empty{[Product].[Product Name].members}ON rows From[Fclub DW]where { [Date].[Year].&[2002]}";
+        public IEnumerable<string> GetAllProducts()
+        {
+            string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns,non empty{[Product].[Product Name].members}ON rows From[Fclub DW]where { [Date].[Year].&[2002]}";
 
-        //    AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
+            adomdConnection.Open();
 
-            
-        //}
+            AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
+
+
+            AdomdDataReader dr = cmd.ExecuteReader();
+
+            List<string> stringlist = new List<string>();
+
+            while (dr.Read())
+            {
+                stringlist.Add(dr[1].ToString()); // virker edit query
+
+            }
+            return stringlist;
+
+        }
 
 
     }
