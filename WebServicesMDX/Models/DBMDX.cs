@@ -11,7 +11,6 @@ namespace WebServicesMDX.Models
 {
     public class DBMDX
     {
-        static string json;
         AdomdConnection adomdConnection = new AdomdConnection("Data Source=localhost; catalog=AnalysisServicesTutorial;");
 
         public IEnumerable<Product> getProductSaleCount(int year)
@@ -20,7 +19,7 @@ namespace WebServicesMDX.Models
 
             try
             {
-                string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns, non empty{[Product].[Product Name].members} " +
+                string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns, non empty{[Product].[Product Name].children} " +
                     "ON rows From[Fclub DW] where {[Date].[Year].&[" + year + "]}";
 
                 adomdConnection.Open();
@@ -32,21 +31,6 @@ namespace WebServicesMDX.Models
                     Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
                     productList.Add(product);
                 }
-
-                DataContractJsonSerializer serializeJSON = new DataContractJsonSerializer(typeof(Product));
-                MemoryStream streamObj = new MemoryStream();
-                StreamReader streamReader = new StreamReader(streamObj);
-
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    serializeJSON.WriteObject(streamObj, productList[i]);
-                    streamObj.Position = 0;
-                    json = streamReader.ReadToEnd();
-                }
-
-                Console.WriteLine(json);
-                streamReader.Close();
-                streamObj.Close();
             }
 
             catch (Exception e)
@@ -74,21 +58,6 @@ namespace WebServicesMDX.Models
                     Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
                     productList.Add(product);
                 }
-
-                DataContractJsonSerializer serializeJSON = new DataContractJsonSerializer(typeof(Product));
-                MemoryStream streamObj = new MemoryStream();
-                StreamReader streamReader = new StreamReader(streamObj);
-
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    serializeJSON.WriteObject(streamObj, productList[i]);
-                    streamObj.Position = 0;
-                    json = streamReader.ReadToEnd();
-                }
-
-                Console.WriteLine(json);
-                streamReader.Close();
-                streamObj.Close();
             }
 
             catch (Exception e)
@@ -117,21 +86,6 @@ namespace WebServicesMDX.Models
                     Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
                     productList.Add(product);
                 }
-
-                DataContractJsonSerializer serializeJSON = new DataContractJsonSerializer(typeof(Product));
-                MemoryStream streamObj = new MemoryStream();
-                StreamReader streamReader = new StreamReader(streamObj);
-
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    serializeJSON.WriteObject(streamObj, productList[i]);
-                    streamObj.Position = 0;
-                    json = streamReader.ReadToEnd();
-                }
-
-                Console.WriteLine(json);
-                streamReader.Close();
-                streamObj.Close();
             }
 
             catch (Exception e)
@@ -159,21 +113,6 @@ namespace WebServicesMDX.Models
                     Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
                     productList.Add(product);
                 }
-
-                DataContractJsonSerializer serializeJSON = new DataContractJsonSerializer(typeof(Product));
-                MemoryStream streamObj = new MemoryStream();
-                StreamReader streamReader = new StreamReader(streamObj);
-
-                for (int i = 0; i < productList.Count; i++)
-                {
-                    serializeJSON.WriteObject(streamObj, productList[i]);
-                    streamObj.Position = 0;
-                    json = streamReader.ReadToEnd();
-                }
-
-                Console.WriteLine(json);
-                streamReader.Close();
-                streamObj.Close();
             }
 
             catch (Exception e)
@@ -184,16 +123,14 @@ namespace WebServicesMDX.Models
             return productList;
         }
     }
-    [DataContract]
+
     public class Product
     {
-        [DataMember(Name = "Product Count")]
-        public string ProductCount { get; set; }
+        public string ProductName { get; set; }
 
-        public Product(string productCount)
+        public Product(string productName)
         {
-            ProductCount = productCount;
+            ProductName = productName;
         }
     }
-
 }
