@@ -11,18 +11,13 @@ namespace WebServicesMDX.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IEnumerable<string> Get()
+        public IEnumerable<Product> Get()
         {
-
-
-
             DBMDX d = new DBMDX();
+            List<Product> productList = new List<Product>();
+            productList = (List<Product>)d.getProductCountMDX();
 
-            List<string> stringlist = new List<string>();
-
-            stringlist = (List<string>)d.GetAllProducts();
-
-            return stringlist;
+            return productList;
         }
 
         // GET api/values/5
