@@ -10,15 +10,15 @@ namespace WebServicesMDX.Controllers
 {
     public class ValuesController : ApiController
     {
-        // GET api/values
-        public IEnumerable<Product> Get()
-        {
-            DBMDX d = new DBMDX();
-            List<Product> productList = new List<Product>();
-            productList = (List<Product>)d.getProductSaleCount(dato.Year,dato.Month,dato.Day);
+        //// GET api/values
+        //public IEnumerable<Product> Get()
+        //{
+        //    //DBMDX d = new DBMDX();
+        //    //List<Product> productList = new List<Product>();
+        //    //productList = (List<Product>)d.getProductSaleCountYearMonthDay(dato.Year,dato.Month,dato.Day);
 
-            return productList;
-        }
+        //    //return productList;
+        //}
 
       //  GET api/values/5
         public string Get(int id)

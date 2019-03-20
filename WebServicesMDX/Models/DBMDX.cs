@@ -216,7 +216,7 @@ namespace WebServicesMDX.Models
 
                 while (dr.Read())
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) +  ": " + dr[3].ToString());
                     productList.Add(product);
                 }
             }
@@ -243,7 +243,7 @@ namespace WebServicesMDX.Models
 
                 while (dr.Read())
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) + ": " + dr.GetValue(3));
                     productList.Add(product);
                 }
             }
