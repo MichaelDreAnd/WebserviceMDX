@@ -11,11 +11,8 @@ namespace WebServicesMDX.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IEnumerable<Product> Get(string date)
+        public IEnumerable<Product> Get()
         {
-           
-            DateTime dato = Convert.ToDateTime(date);
-           
             DBMDX d = new DBMDX();
             List<Product> productList = new List<Product>();
             productList = (List<Product>)d.getProductSaleCount(dato.Year,dato.Month,dato.Day);
