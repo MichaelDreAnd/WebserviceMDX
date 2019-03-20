@@ -14,7 +14,7 @@ namespace WebServicesMDX.Models
         static string json;
         AdomdConnection adomdConnection = new AdomdConnection("Data Source=localhost; catalog=AnalysisServicesTutorial;");
 
-        public IEnumerable<Product> getProductSaleCount(int year)
+        public IEnumerable<Product> getProductSaleCount(int year, int month, int day)
         {
             List<Product> productList = new List<Product>();
 
@@ -98,7 +98,7 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
-        public IEnumerable<Product> getProductCategoriesSaleCount(int year)
+        public IEnumerable<Product> getProductCategoriesSaleCount(int year,int month,int day)
         {
             List<Product> productList = new List<Product>();
 

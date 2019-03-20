@@ -11,16 +11,19 @@ namespace WebServicesMDX.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IEnumerable<Product> Get()
+        public IEnumerable<Product> Get(string date)
         {
+           
+            DateTime dato = Convert.ToDateTime(date);
+           
             DBMDX d = new DBMDX();
             List<Product> productList = new List<Product>();
-            productList = (List<Product>)d.getProductSaleCount(2004);
+            productList = (List<Product>)d.getProductSaleCount(dato.Year,dato.Month,dato.Day);
 
             return productList;
         }
 
-        // GET api/values/5
+      //  GET api/values/5
         public string Get(int id)
         {
             return "value";
