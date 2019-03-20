@@ -6,6 +6,7 @@ using Microsoft.AnalysisServices.AdomdClient;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Text;
 
 namespace WebServicesMDX.Models
 {
@@ -200,9 +201,41 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
-        public IEnumerable<Product> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
+        //public IEnumerable<Product> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
+        //{
+        //    List<Product> productList = new List<Product>();
+        //    string season = checkSeason(month);
+        //    try
+        //    {
+        //        string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns, " +
+        //            "non empty{[Product].[Main Category].children * [Product].[Sub Category].children * [Product].[Sub Sub Category].children} " +
+        //            "ON rows From [Fclub DW] where {[Date].[Hierarchy].[Day Number Of Month].&[" + day + "]&[" + year + "]&[" + season + "]&[" + month + "]}";
+
+        //        adomdConnection.Open();
+        //        AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
+                
+        //        AdomdDataReader dr = cmd.ExecuteReader();
+
+        //        while (dr.Read())
+        //        {
+        //            Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) +  ": " + dr[3].ToString());
+        //            productList.Add(product);
+        //        }
+        //    }
+
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine("Errormessage: " + e.Message);
+        //        return null;
+        //    }
+        //    return productList;
+        //}
+
+        public IEnumerable<Category> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
         {
-            List<Product> productList = new List<Product>();
+            List<Category> categoryList = new List<Category>();
+            StringBuilder result = new StringBuilder();
+
             string season = checkSeason(month);
             try
             {
@@ -212,13 +245,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) +  ": " + dr[3].ToString());
-                    productList.Add(product);
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Category cat = new Category(result.ToString());
+                    categoryList.Add(cat);
+                    result.Clear();
+
                 }
+            
             }
 
             catch (Exception e)
@@ -226,7 +283,7 @@ namespace WebServicesMDX.Models
                 Console.WriteLine("Errormessage: " + e.Message);
                 return null;
             }
-            return productList;
+            return categoryList;
         }
         public IEnumerable<Product> getProductCategories()
         {
@@ -264,6 +321,16 @@ namespace WebServicesMDX.Models
         public Product(string productName)
         {
             ProductName = productName;
+        }
+    }
+
+    public class Category
+    {
+        public string CategoryName { get; set; }
+
+        public Category(string categoryName)
+        {
+            CategoryName = categoryName;
         }
     }
 }
