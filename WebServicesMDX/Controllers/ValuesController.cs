@@ -15,7 +15,7 @@ namespace WebServicesMDX.Controllers
         {
             DBMDX d = new DBMDX();
             List<Product> productList = new List<Product>();
-            productList = (List<Product>)d.getProductSaleCount(2004);
+            productList = (List<Product>)d.getProductSaleCountYear(2004);
 
             return productList;
         }
