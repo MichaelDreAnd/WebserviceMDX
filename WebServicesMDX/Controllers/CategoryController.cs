@@ -10,21 +10,24 @@ namespace WebServicesMDX.Controllers
 {
     public class CategoryController : ApiController
     {
-        //public IEnumerable<Product> Get(int year,int month,int day)
-        //{
-            
+        public IEnumerable<Category> Get(int year)
+        {
+            DBMDX d = new DBMDX();
+            List<Category> categoryList = new List<Category>();
+            categoryList = (List<Category>)d.getProductCategoriesSaleCountYear(year);
 
-        //    DBMDX d = new DBMDX();
-        //    List<Product> productList = new List<Product>();
-        //    productList = (List<Product>)d.getProductCategoriesSaleCountYearMonthDay(year, month, day);
+            return categoryList;
+        }
+        public IEnumerable<Category> Get(int year, int month)
+        {
+            DBMDX d = new DBMDX();
+            List<Category> categoryList = new List<Category>();
+            categoryList = (List<Category>)d.getProductCategoriesSaleCountYearMonth(year, month);
 
-        //    return productList;
-        //}
-
+            return categoryList;
+        }
         public IEnumerable<Category> Get(int year, int month, int day)
         {
-
-
             DBMDX d = new DBMDX();
             List<Category> categoryList = new List<Category>();
             categoryList = (List<Category>)d.getProductCategoriesSaleCountYearMonthDay(year, month, day);
@@ -34,9 +37,10 @@ namespace WebServicesMDX.Controllers
 
         public IEnumerable<Product> Get()
         {
-           DBMDX d = new DBMDX();
+            DBMDX d = new DBMDX();
             List<Product> productList = new List<Product>();
             productList = (List<Product>)d.getProductCategories();
+
             return productList;
         }
     }

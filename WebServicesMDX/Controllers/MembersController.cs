@@ -12,8 +12,6 @@ namespace WebServicesMDX.Controllers
     {
         public IEnumerable<Product> Get()
         {
-            
-
             DBMDX d = new DBMDX();
             List<Product> productList = new List<Product>();
             productList = (List<Product>)d.getProductSaleCountMembers();

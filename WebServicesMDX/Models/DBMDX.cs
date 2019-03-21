@@ -12,12 +12,12 @@ namespace WebServicesMDX.Models
 {
     public class DBMDX
     {
-        string season;
         AdomdConnection adomdConnection = new AdomdConnection("Data Source=localhost; catalog=AnalysisServicesTutorial;");
 
         public IEnumerable<Product> getProductSaleCountYear(int year)
         {
             List<Product> productList = new List<Product>();
+            StringBuilder result = new StringBuilder();
 
             try
             {
@@ -26,13 +26,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Product product = new Product(result.ToString());
                     productList.Add(product);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -42,44 +66,50 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
-        public string checkSeason(int month)
-        {
-            if (month == 12 || month == 1 || month == 2)
-            {
-                season = "Winter";
-            }
-            if (month == 3 || month == 4 || month == 5)
-            {
-                season = "Spring";
-            }
-            if (month == 6 || month == 7 || month == 8)
-            {
-                season = "Summer";
-            }
-            if (month == 9 || month == 10 || month == 11)
-            {
-                season = "Fall";
-            }
-            return season;
-        }
         public IEnumerable<Product> getProductSaleCountYearMonth(int year, int month)
         {
             List<Product> productList = new List<Product>();
+            StringBuilder result = new StringBuilder();
+
             string season = checkSeason(month);
             try
             {
                 string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns, non empty{[Product].[Product Name].children} " +
-                    "ON rows From[Fclub DW] where {[Date].[Hierarchy].[Month Number Of Year].&["+ month +"]&["+ year + "]&[" + season + "]}";
+                    "ON rows From[Fclub DW] where {[Date].[Hierarchy].[Month Number Of Year].&[" + month + "]&[" + year + "]&[" + season + "]}";
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Product product = new Product(result.ToString());
                     productList.Add(product);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -93,6 +123,8 @@ namespace WebServicesMDX.Models
         public IEnumerable<Product> getProductSaleCountYearMonthDay(int year, int month, int day)
         {
             List<Product> productList = new List<Product>();
+            StringBuilder result = new StringBuilder();
+
             string season = checkSeason(month);
             try
             {
@@ -101,13 +133,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Product product = new Product(result.ToString());
                     productList.Add(product);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -117,10 +173,10 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
-
         public IEnumerable<Product> getProductSaleCountMembers()
         {
             List<Product> productList = new List<Product>();
+            StringBuilder result = new StringBuilder();
 
             try
             {
@@ -129,13 +185,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Product product = new Product(result.ToString());
                     productList.Add(product);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -145,9 +225,10 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
-        public IEnumerable<Product> getProductCategoriesSaleCountYear(int year)
+        public IEnumerable<Category> getProductCategoriesSaleCountYear(int year)
         {
-            List<Product> productList = new List<Product>();
+            List<Category> categoryList = new List<Category>();
+            StringBuilder result = new StringBuilder();
 
             try
             {
@@ -157,13 +238,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
-                    productList.Add(product);
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Category cat = new Category(result.ToString());
+                    categoryList.Add(cat);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -171,11 +276,13 @@ namespace WebServicesMDX.Models
                 Console.WriteLine("Errormessage: " + e.Message);
                 return null;
             }
-            return productList;
+            return categoryList;
         }
-        public IEnumerable<Product> getProductCategoriesSaleCountYearMonth(int year, int month)
+        public IEnumerable<Category> getProductCategoriesSaleCountYearMonth(int year, int month)
         {
-            List<Product> productList = new List<Product>();
+            List<Category> categoryList = new List<Category>();
+            StringBuilder result = new StringBuilder();
+
             string season = checkSeason(month);
             try
             {
@@ -185,13 +292,37 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr[1].ToString());
-                    productList.Add(product);
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Category cat = new Category(result.ToString());
+                    categoryList.Add(cat);
+                    result.Clear();
+
                 }
+
             }
 
             catch (Exception e)
@@ -199,7 +330,7 @@ namespace WebServicesMDX.Models
                 Console.WriteLine("Errormessage: " + e.Message);
                 return null;
             }
-            return productList;
+            return categoryList;
         }
         //public IEnumerable<Product> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
         //{
@@ -213,7 +344,7 @@ namespace WebServicesMDX.Models
 
         //        adomdConnection.Open();
         //        AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                
+
         //        AdomdDataReader dr = cmd.ExecuteReader();
 
         //        while (dr.Read())
@@ -277,7 +408,7 @@ namespace WebServicesMDX.Models
                 }
             
             }
-
+            
             catch (Exception e)
             {
                 Console.WriteLine("Errormessage: " + e.Message);
@@ -288,7 +419,7 @@ namespace WebServicesMDX.Models
         public IEnumerable<Product> getProductCategories()
         {
             List<Product> productList = new List<Product>();
-
+            StringBuilder result = new StringBuilder();
             try
             {
                 string commandtext = "SELECT {} ON 0, {[Product].[Product Name].[Product Name] *[Product].[Main Category].children*[Product].[Sub Category].children*[Product].[Sub Sub Category].children} " +
@@ -296,21 +427,65 @@ namespace WebServicesMDX.Models
 
                 adomdConnection.Open();
                 AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-                AdomdDataReader dr = cmd.ExecuteReader();
 
-                while (dr.Read())
+                CellSet cs = cmd.ExecuteCellSet();
+
+                TupleCollection tupleCollection = cs.Axes[0].Set.Tuples;
+
+                TupleCollection tuplesOnRow = cs.Axes[1].Set.Tuples;
+
+                int row = 0;
+                foreach (var obj in tuplesOnRow)
                 {
-                    Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) + ": " + dr.GetValue(3));
-                    productList.Add(product);
+                    for (int members = 0; members < tuplesOnRow[row].Members.Count; members++)
+                    {
+                        result.Append(tuplesOnRow[row].Members[members].Caption + ": ");
+
+                    }
+                    for (int col = 0; col < tupleCollection.Count; col++)
+                    {
+                        result.Append(cs.Cells[col, row].FormattedValue);
+                        if (col < tupleCollection.Count - 1)
+                        {
+                            result.Append(": ");
+                        }
+                    }
+                    row++;
+
+                    Product ProductCat = new Product(result.ToString());
+                    productList.Add(ProductCat);
+                    result.Clear();
                 }
             }
-
             catch (Exception e)
             {
                 Console.WriteLine("Errormessage: " + e.Message);
                 return null;
             }
             return productList;
+        }
+
+        string season;
+        public string checkSeason(int month)
+        {
+            
+            if (month == 12 || month == 1 || month == 2)
+            {
+                season = "Winter";
+            }
+            if (month == 3 || month == 4 || month == 5)
+            {
+                season = "Spring";
+            }
+            if (month == 6 || month == 7 || month == 8)
+            {
+                season = "Summer";
+            }
+            if (month == 9 || month == 10 || month == 11)
+            {
+                season = "Fall";
+            }
+            return season;
         }
     }
 
