@@ -442,6 +442,8 @@ namespace WebServicesMDX.Models
 
         #endregion
 
+        #region Season
+
         string season;
         public string checkSeason(int month)
         {
@@ -464,6 +466,8 @@ namespace WebServicesMDX.Models
             }
             return season;
         }
+
+        #endregion
     }
 
     public class Product
