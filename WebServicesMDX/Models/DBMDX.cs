@@ -14,6 +14,7 @@ namespace WebServicesMDX.Models
     {
         AdomdConnection adomdConnection = new AdomdConnection("Data Source=localhost; catalog=AnalysisServicesTutorial;");
 
+        #region Products
         public IEnumerable<Product> getProductSaleCountYear(int year)
         {
             List<Product> productList = new List<Product>();
@@ -225,6 +226,9 @@ namespace WebServicesMDX.Models
             }
             return productList;
         }
+#endregion
+
+        #region ProductCategories
         public IEnumerable<Category> getProductCategoriesSaleCountYear(int year)
         {
             List<Category> categoryList = new List<Category>();
@@ -332,35 +336,6 @@ namespace WebServicesMDX.Models
             }
             return categoryList;
         }
-        //public IEnumerable<Product> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
-        //{
-        //    List<Product> productList = new List<Product>();
-        //    string season = checkSeason(month);
-        //    try
-        //    {
-        //        string commandtext = "SELECT {[Measures].[Sale Count]} ON Columns, " +
-        //            "non empty{[Product].[Main Category].children * [Product].[Sub Category].children * [Product].[Sub Sub Category].children} " +
-        //            "ON rows From [Fclub DW] where {[Date].[Hierarchy].[Day Number Of Month].&[" + day + "]&[" + year + "]&[" + season + "]&[" + month + "]}";
-
-        //        adomdConnection.Open();
-        //        AdomdCommand cmd = new AdomdCommand(commandtext, adomdConnection);
-
-        //        AdomdDataReader dr = cmd.ExecuteReader();
-
-        //        while (dr.Read())
-        //        {
-        //            Product product = new Product(dr.GetValue(0) + ": " + dr.GetValue(1) + ": " + dr.GetValue(2) +  ": " + dr[3].ToString());
-        //            productList.Add(product);
-        //        }
-        //    }
-
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("Errormessage: " + e.Message);
-        //        return null;
-        //    }
-        //    return productList;
-        //}
 
         public IEnumerable<Category> getProductCategoriesSaleCountYearMonthDay(int year, int month, int day)
         {
@@ -416,9 +391,9 @@ namespace WebServicesMDX.Models
             }
             return categoryList;
         }
-        public IEnumerable<Product> getProductCategories()
+        public IEnumerable<Category> getProductCategories()
         {
-            List<Product> productList = new List<Product>();
+            List<Category> categoryList = new List<Category>();
             StringBuilder result = new StringBuilder();
             try
             {
@@ -452,8 +427,8 @@ namespace WebServicesMDX.Models
                     }
                     row++;
 
-                    Product ProductCat = new Product(result.ToString());
-                    productList.Add(ProductCat);
+                    Category cat = new Category(result.ToString());
+                    categoryList.Add(cat);
                     result.Clear();
                 }
             }
@@ -462,8 +437,10 @@ namespace WebServicesMDX.Models
                 Console.WriteLine("Errormessage: " + e.Message);
                 return null;
             }
-            return productList;
+            return categoryList;
         }
+
+        #endregion
 
         string season;
         public string checkSeason(int month)

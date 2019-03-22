@@ -34,14 +34,13 @@ namespace WebServicesMDX.Controllers
 
             return categoryList;
         }
-
-        public IEnumerable<Product> Get()
+        public IEnumerable<Category> Get()
         {
             DBMDX d = new DBMDX();
-            List<Product> productList = new List<Product>();
-            productList = (List<Product>)d.getProductCategories();
+            List<Category> categoryList = new List<Category>();
+            categoryList = (List<Category>)d.getProductCategories();
 
-            return productList;
+            return categoryList;
         }
     }
 }
